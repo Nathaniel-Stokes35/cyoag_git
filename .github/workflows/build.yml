@@ -88,7 +88,7 @@ jobs:
           
           # Set output variable for next steps
           echo "new_tag=$new_tag" >> $GITHUB_ENV
-
+      
       - name: Create a new Git tag
         run: |
           # Fetch existing tags to ensure we're working with the latest
@@ -99,6 +99,7 @@ jobs:
       
           # Push the new tag to GitHub
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
+          
         
 
       - name: Create GitHub Release and Upload Artifacts
