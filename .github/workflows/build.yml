@@ -110,4 +110,4 @@ jobs:
             cyoag-windows.zip
             cyoag-mac.tar.gz
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Required to create a release and upload files
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Required to create a release and upload files | Trying again
