@@ -93,14 +93,17 @@ jobs:
         run: |
           # Fetch existing tags to ensure we're working with the latest
           git fetch --tags
-      
+
           # Create a new tag with the incremented version
           git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
-      
+
           # Push the new tag to GitHub
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
-          
-        
+
+      - name: Verify tag is pushed
+        run: |
+          # List tags to verify the tag is created and pushed
+          git tag -l
 
       - name: Create GitHub Release and Upload Artifacts
         uses: softprops/action-gh-release@v1
@@ -110,4 +113,4 @@ jobs:
             cyoag-windows.zip
             cyoag-mac.tar.gz
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Required to create a release and upload files | Trying again
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Required to create a release and upload files
