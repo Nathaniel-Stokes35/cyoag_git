@@ -82,6 +82,24 @@ jobs:
           # Set output variable for next steps
           echo "new_tag=$new_tag" >> $GITHUB_ENV
 
+      - name: Set up Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+      - name: Fetch existing tags to ensure we're working with the latest
+        run: |
+          git fetch --tags
+
+      - name: Create a new Git tag
+        run: |
+          # Create a new tag with the incremented version
+          git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
+
+          # Push the new tag to GitHub
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
+  
+
       - name: Create a new Git tag
         run: |
           # Fetch existing tags to ensure we're working with the latest
