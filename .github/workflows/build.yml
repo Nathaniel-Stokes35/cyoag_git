@@ -36,8 +36,13 @@ jobs:
         run: |
           pyinstaller --onefile run_cyoag.py
 
-      - name: List dist directory contents
-        run: ls -alh dist/
+      - name: List dist directory contents (Windows)
+        run: |
+          if ($Env:RUNNER_OS -eq "Windows") {
+            Get-ChildItem dist
+          } else {
+            ls -alh dist/
+          }
 
       - name: Archive the executable (Linux)
         if: matrix.os == 'ubuntu-latest'
@@ -86,7 +91,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
+
       - name: Fetch existing tags to ensure we're working with the latest
         run: |
           git fetch --tags
@@ -96,18 +101,6 @@ jobs:
           # Create a new tag with the incremented version
           git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
 
-          # Push the new tag to GitHub
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
-  
-
-      - name: Create a new Git tag
-        run: |
-          # Fetch existing tags to ensure we're working with the latest
-          git fetch --tags
-      
-          # Create a new tag with the incremented version
-          git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
-      
           # Push the new tag to GitHub
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
 
