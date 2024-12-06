@@ -5,6 +5,10 @@ on:
     branches:
       - development  # Trigger when pushing to the 'development' branch
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}  # Run on each OS in the matrix
