@@ -87,6 +87,11 @@ jobs:
         run: |
           git fetch --tags
 
+      - name: Debug - List Tags (before creating release)
+        run: |
+          echo "Listing all tags..."
+          git tag -l  # List all tags to check if the tag exists
+
       - name: Create a new Git tag
         run: |
           git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
