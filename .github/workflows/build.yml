@@ -43,6 +43,7 @@ jobs:
           } else {
             ls -alh dist/
           }
+          fi
 
       - name: Archive the executable (Linux)
         if: matrix.os == 'ubuntu-latest'
