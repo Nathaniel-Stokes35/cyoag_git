@@ -3,7 +3,7 @@ name: Build Executables
 on:
   push:
     branches:
-      - main  # Trigger when pushing to the 'main' branch
+      - development  # Trigger when pushing to the 'development' branch
 
 jobs:
   build:
