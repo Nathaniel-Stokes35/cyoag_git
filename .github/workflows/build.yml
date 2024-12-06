@@ -89,7 +89,7 @@ jobs:
         run: |
           # Create a new tag with the incremented version
           git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
-          git push origin ${{ env.new_tag }}
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} ${{ env.new_tag }}
 
       - name: Create GitHub Release and Upload Artifacts
         uses: softprops/action-gh-release@v1
