@@ -50,7 +50,7 @@ jobs:
       - name: Archive the executable
         if: matrix.os == 'macos-latest'
         run: |
-          mv dist/run_cyoag.app cyoag-mac  # Rename macOS app
+          mv dist/run_cyoag cyoag-mac  # Rename macOS app
           tar -czf cyoag-mac.tar.gz cyoag-mac  # Archive macOS app
 
       - name: Upload Executable Artifacts
