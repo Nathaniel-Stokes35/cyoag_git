@@ -36,24 +36,24 @@ jobs:
         run: |
           pyinstaller --onefile run_cyoag.py
 
-      - name: List dist directory contents (cross-platform)
+      - name: List dist directory contents (Windows)
         run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            powershell -Command "Get-ChildItem dist"
-          else
+          if ($Env:RUNNER_OS -eq "Windows") {
+            Get-ChildItem dist
+          } else {
             ls -alh dist/
-          fi
+          }
 
       - name: Archive the executable (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          mv dist/run_cyoag cyoag-linux  # Rename executable for Linux
+          mv dist/run_cyoag cyoag-linux  # Rename executable if needed for clarity
           tar -czf cyoag-linux.tar.gz cyoag-linux  # Archive Linux executable
 
       - name: Archive the executable (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          move dist\run_cyoag.exe cyoag-windows.exe  # Use `move` instead of `mv` on Windows
+          mv dist/run_cyoag.exe cyoag-windows.exe  # Rename Windows executable
           zip cyoag-windows.zip cyoag-windows.exe  # Zip the Windows executable
 
       - name: Upload Executable Artifacts
@@ -67,15 +67,24 @@ jobs:
       - name: Get latest tag and increment version
         id: get_version
         run: |
+          # Get the latest tag
           latest_tag=$(git tag -l | sort -V | tail -n 1)
+          echo "Latest tag: $latest_tag"
+          
+          # If no tags exist, start from v1.0.0
           if [[ -z "$latest_tag" ]]; then
             new_tag="v1.0.0"
           else
+            # Split version into parts and increment patch version
             version_parts=(${latest_tag//./ })
             patch_version=${version_parts[2]}
             new_patch_version=$((patch_version + 1))
             new_tag="v${version_parts[0]}.${version_parts[1]}.$new_patch_version"
           fi
+          
+          echo "New tag: $new_tag"
+          
+          # Set output variable for next steps
           echo "new_tag=$new_tag" >> $GITHUB_ENV
 
       - name: Set up Git user
@@ -87,14 +96,12 @@ jobs:
         run: |
           git fetch --tags
 
-      - name: Debug - List Tags (before creating release)
-        run: |
-          echo "Listing all tags..."
-          git tag -l  # List all tags to check if the tag exists
-
       - name: Create a new Git tag
         run: |
+          # Create a new tag with the incremented version
           git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
+
+          # Push the new tag to GitHub
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
 
       - name: Create GitHub Release and Upload Artifacts
@@ -104,4 +111,4 @@ jobs:
             cyoag-linux.tar.gz
             cyoag-windows.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Required to create a release and upload files Empty change
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Required to create a release and upload files
