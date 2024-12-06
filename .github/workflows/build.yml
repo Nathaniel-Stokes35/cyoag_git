@@ -24,7 +24,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.x  # Use Python 3.x (specify version if needed)
+          python-version: 3.x
 
       - name: Install dependencies
         run: |
@@ -53,7 +53,7 @@ jobs:
       - name: Archive the executable (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          mv dist/run_cyoag.exe cyoag-windows.exe  # Rename Windows executable
+          move dist\run_cyoag.exe cyoag-windows.exe   # Rename Windows executable
           zip cyoag-windows.zip cyoag-windows.exe  # Zip the Windows executable
 
       - name: Upload Executable Artifacts
@@ -99,7 +99,7 @@ jobs:
       - name: Create a new Git tag
         run: |
           # Create a new tag with the incremented version
-          git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
+          git tag -a $new_tag -m "Release version $new_tag"
 
           # Push the new tag to GitHub
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
