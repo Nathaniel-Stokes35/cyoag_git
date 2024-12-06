@@ -1,55 +1,53 @@
-Choose Your Own Adventure Game
-An interactive text-based adventure game where players create their own character and journey through a personalized story based on their MBTI personality type. Built using Python and Tkinter, with plans to expand to space, pirate, and fantasy story settings.
+Choose Your Own Adventure Game (CYOAG)
+Welcome to the Choose Your Own Adventure Game (CYOAG)! This is a Python-based interactive game where you create and explore a personalized character and journey, influenced by your responses and choices.
 
-Current Status
-This game is a work in progress. Currently, only the Introduction section of the Space Adventure is available. Future plans include adding exploration, pirate, and fantasy settings, each with different characters, classes, and personality types for the player to choose from.
+Features:
+Cross-platform Support: Now available as standalone executables for Linux, Windows, and macOS.
+Character Creation: Design your character based on the MBTI personality types and test your decisions in various story settings.
+Multiple Settings: Explore different genres such as Space, Pirate, and Fantasy (currently, only the Space setting is available).
+How to Play:
+Download the Executable:
 
-Features
-Character Creation based on MBTI personality type.
-Story-based interactions where player choices affect the narrative.
-Space Adventure theme (more themes coming soon!).
-Setup Instructions
-To get the Choose Your Own Adventure Game running on your system, simply follow these steps:
+Choose your platform (Linux, Windows, or macOS) from the Releases section of this GitHub repository.
+Download the appropriate .tar.gz, .zip, or .app file for your operating system.
+Run the Executable:
 
-1. Clone the Repository
-First, clone this repository to your local machine:
+Linux: Extract the .tar.gz and run the cyoag-linux executable.
+Windows: Extract the .zip and run the cyoag-windows.exe file.
+macOS: Extract the .tar.gz and open the .app bundle to start the game.
+Enjoy the Game: Make choices that define your character's personality, starting class, and path in a space-themed adventure (more settings and features will be added in the future).
 
-bash
-Copy code
-git clone https://github.com/Nathaniel-Stokes35/choose-your-own-adventure-game.git
-2. Run the Setup Script
-I’ve created an automated script to help set up the environment and install dependencies for you.
+How to Run (For Developers):
+If you'd like to run the game from source, follow the steps below:
 
-Download the repository and navigate to the project folder.
-
-Run the following script:
-
-On Linux/macOS:
+Clone the repository:
 
 bash
 Copy code
-python3 run_cyoag.py
-On Windows:
+git clone https://github.com/Nathaniel-Stokes35/cyoag.git
+cd cyoag
+Install dependencies:
+
+Make sure you have Python 3.x installed.
+Install the required dependencies by running:
+bash
+Copy code
+pip install -r requirements.txt
+Run the game:
 
 bash
 Copy code
 python run_cyoag.py
-The script will:
+Dependencies:
+Pillow: For image handling.
+tkinter: For the graphical user interface (GUI).
+Python 3.x: Required for running the game.
 
-Detect your operating system.
-Automatically install the necessary dependencies.
-Launch the game after the setup is complete.
-Running the Game
-Once the setup is complete, the game will launch automatically. If you want to run it manually, simply use:
+Contributing:
+Feel free to fork this repository, contribute improvements, or suggest new features. I plan to add more settings, classes, and options as development continues. If you’d like to contribute to the project, please open an issue or submit a pull request.
 
-bash
-Copy code
-python3 cyoag.py  # For Linux/macOS
-Or on Windows:
-
-bash
-Copy code
-python cyoag.py
+GitHub Actions:
+This project uses GitHub Actions to automatically build platform-specific executables. Every time a change is pushed to the main branch, the system automatically packages the game for Linux, Windows, and macOS, which can be downloaded from the Releases section.
 Contributing
 This is a personal project, but if you're interested in contributing or adding new features, feel free to submit a pull request! Contributions are always welcome, and feel free to open issues for any bugs you encounter or features you think would improve the game.
 
