@@ -3,15 +3,15 @@ name: Build Executables
 on:
   push:
     branches:
-      - main
+      - main  # Trigger when pushing to the 'main' branch
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}  # Run on each OS in the matrix
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]  # Build on Linux, macOS, and Windows
 
     steps:
       - name: Checkout repository
@@ -20,19 +20,51 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.x
+          python-version: 3.x  # Use Python 3.x (specify version if needed)
 
-      - name: Install PyInstaller
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Build the executable
+      - name: Build the executable with PyInstaller
         run: |
           pyinstaller --onefile run_cyoag.py
 
-      - name: Upload executable
+      - name: Archive the executable
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mv dist/run_cyoag cyoag-linux  # Rename executable if needed for clarity
+          tar -czf cyoag-linux.tar.gz cyoag-linux  # Archive Linux executable
+
+      - name: Archive the executable
+        if: matrix.os == 'windows-latest'
+        run: |
+          mv dist/run_cyoag.exe cyoag-windows.exe  # Rename Windows executable
+          zip cyoag-windows.zip cyoag-windows.exe  # Zip the Windows executable
+
+      - name: Archive the executable
+        if: matrix.os == 'macos-latest'
+        run: |
+          mv dist/run_cyoag.app cyoag-mac.app  # Rename macOS app
+          tar -czf cyoag-mac.tar.gz cyoag-mac.app  # Archive macOS app
+
+      - name: Upload Executable Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: executable
-          path: dist/*
+          name: cyoag-executables
+          path: |
+            cyoag-linux.tar.gz
+            cyoag-windows.zip
+            cyoag-mac.tar.gz
+
+      - name: Create GitHub Release and Upload Artifacts
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            cyoag-linux.tar.gz
+            cyoag-windows.zip
+            cyoag-mac.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Required to create a release and upload files
