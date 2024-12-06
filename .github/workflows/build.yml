@@ -36,14 +36,15 @@ jobs:
         run: |
           pyinstaller --onefile run_cyoag.py
 
-      - name: List dist directory contents (Windows)
+      - name: List dist directory contents (Linux/macOS)
+        if: runner.os != 'Windows'  # Only run this on Linux/macOS
         run: |
-          if ($Env:RUNNER_OS -eq "Windows") {
-            Get-ChildItem dist
-          } else {
-            ls -alh dist/
-          }
-          fi
+          ls -alh dist/
+
+      - name: List dist directory contents (Windows)
+        if: runner.os == 'Windows'  # Only run this on Windows
+        run: |
+          Get-ChildItem dist
 
       - name: Archive the executable (Linux)
         if: matrix.os == 'ubuntu-latest'
