@@ -91,9 +91,15 @@ jobs:
 
       - name: Create a new Git tag
         run: |
+          # Fetch existing tags to ensure we're working with the latest
+          git fetch --tags
+      
           # Create a new tag with the incremented version
           git tag -a ${{ env.new_tag }} -m "Release version ${{ env.new_tag }}"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} ${{ env.new_tag }}
+      
+          # Push the new tag to GitHub
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
+        
 
       - name: Create GitHub Release and Upload Artifacts
         uses: softprops/action-gh-release@v1
