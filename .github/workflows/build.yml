@@ -51,7 +51,7 @@ jobs:
           tar -czf cyoag-mac.tar.gz cyoag-mac.app  # Archive macOS app
 
       - name: Upload Executable Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cyoag-executables
           path: |
