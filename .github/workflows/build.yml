@@ -35,6 +35,10 @@ jobs:
       - name: List dist directory contents
         run: ls -alh dist/
 
+      - name: Rename macOS executable
+        run: |
+          mv dist/run_cyoag cyoag-mac  # Rename the executable for macOS
+
       - name: Archive the executable
         if: matrix.os == 'ubuntu-latest'
         run: |
