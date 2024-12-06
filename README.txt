@@ -1,4 +1,4 @@
-Choose Your Own Adventure Game (CYOAG)
+Choose Your Own Adventure Novel Game (CYOAG)
 Welcome to the Choose Your Own Adventure Game (CYOAG)! This is a Python-based interactive game where you create and explore a personalized character and journey, influenced by your responses and choices.
 
 Features:
