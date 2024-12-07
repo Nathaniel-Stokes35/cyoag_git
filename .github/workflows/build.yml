@@ -75,8 +75,6 @@ jobs:
       - name: Get latest tag and increment version
         id: get_version
         run: |
-          # Proceed with known-good flow
-          new_patch_version=$((version_parts[2] + 1))
           new_tag="v0.0.1" 
 
           echo "Version parts: ${version_parts[@]}"
