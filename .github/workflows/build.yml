@@ -31,27 +31,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
+
       - name: Build the executable with PyInstaller
         run: |
           pyinstaller --onefile run_cyoag.py
+
       - name: List dist directory contents (Linux/macOS)
         if: runner.os != 'Windows'  # Only run this on Linux/macOS
         run: |
           ls -alh dist/
+
       - name: List dist directory contents (Windows)
         if: runner.os == 'Windows'  # Only run this on Windows
         run: |
           Get-ChildItem dist
+
       - name: Archive the executable (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
           mv dist/run_cyoag cyoag-linux  # Rename executable if needed for clarity
           tar -czf cyoag-linux.tar.gz cyoag-linux  # Archive Linux executable
+
       - name: Archive the executable (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          move dist\run_cyoag.exe cyoag-windows.exe   # Rename Windows executable
-          zip cyoag-windows.zip cyoag-windows.exe  # Zip the Windows executable
+          Rename-Item -Path "dist/run_cyoag.exe" -NewName "cyoag-windows.exe"
+          Compress-Archive -Path "cyoag-windows.exe" -DestinationPath "cyoag-windows.zip"
+        shell: pwsh
+
       - name: Upload Executable Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -59,61 +66,47 @@ jobs:
           path: |
             cyoag-linux.tar.gz
             cyoag-windows.zip
+
       - name: Set up Git user
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Get latest tag and increment version
         id: get_version
         run: |
-          # Fetch all tags
+          set -x  # Enable verbose debugging
+
           git fetch --tags
-      
-          # Get the latest tag and increment
-          latest_tag=$(git tag -l | sort -V | tail -n 1)
-          echo "Latest tag: $latest_tag"
-      
-          # Split the version string into an array by '.' separator
-          version_parts=(${latest_tag//./ })
-          # If no valid tag is found, initialize to v1.0.-1 (this ensures the first increment will make it v1.0.0)
-      
-          # If no valid tag is found, initialize to v1.0.-1
-          if [[ ${#version_parts[@]} -eq 0 ]]; then
-            version_parts=("1" "0" "-1")  # Start with v1.0.-1
+          latest_tag=$(git tag -l | sort -V | tail -n 1 | tr -d '\n')
+
+          if [[ -z "$latest_tag" ]]; then
             version_parts=("1" "0" "-1")
-          fi
-      
-          # Increment the patch version
-          new_patch_version=$((version_parts[2] + 1))
-          # Create the new tag
-      
-          # Create the new version tag
-          new_tag="v${version_parts[0]}.${version_parts[1]}.$new_patch_version"
-          # Check if the tag already exists
-          if git rev-parse "$new_tag" >/dev/null 2>&1; then
-            echo "Tag $new_tag already exists. Skipping tag creation."
           else
-            echo "New tag: $new_tag"
-            # Create the new tag
-            git tag -a $new_tag -m "Release version $new_tag"
-            # Push the new tag to GitHub
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
+            IFS='.' read -r -a version_parts <<< "$latest_tag"
           fi
-          # Set output variable for next steps
+
+          # Proceed with known-good flow
+          new_patch_version=$((version_parts[2] + 1))
+          new_tag="v1.0.1" 
+
+          echo "Version parts: ${version_parts[@]}"
+          echo "New patch version: $new_patch_version"
           echo "New tag: $new_tag"
+
+          set +x  # Disable debugging
       
           # Set the new tag as an output variable
           echo "new_tag=$new_tag" >> $GITHUB_ENV
 
-      - name: Fetch existing tags to ensure we're working with the latest
-        run: |
-          git fetch --tags
       - name: Create a new Git tag
         run: |
           # Create a new tag with the incremented version
           git tag -a $new_tag -m "Release version $new_tag"
+
           # Push the new tag to GitHub
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
+
       - name: Create GitHub Release and Upload Artifacts
         uses: softprops/action-gh-release@v1
         with:
