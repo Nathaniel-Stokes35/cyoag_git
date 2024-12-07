@@ -75,34 +75,30 @@ jobs:
       - name: Get latest tag and increment version
         id: get_version
         run: |
-          set -x  # Enable tracing to debug variable values
+          # Fetch all tags and debug outputs
+          set -x  # Enable verbose debugging
 
-          # Fetch all tags
           git fetch --tags
 
-          # Get the latest tag
+          # Correct variable assignment
           latest_tag=$(git tag -l | sort -V | tail -n 1)
           echo "Latest tag: $latest_tag"
 
-          # Split the version string into an array
+          # Split into version parts correctly
           IFS='.' read -r -a version_parts <<< "$latest_tag"
 
-          # Initialize version if no valid tag
           if [[ -z "$latest_tag" ]]; then
             version_parts=("1" "0" "-1")
           fi
 
-          # Increment the patch version
           new_patch_version=$((version_parts[2] + 1))
-
-          # Construct the new version tag
           new_tag="v${version_parts[0]}.${version_parts[1]}.$new_patch_version"
 
           echo "Version parts: ${version_parts[@]}"
           echo "New patch version: $new_patch_version"
           echo "New tag: $new_tag"
 
-          set +x  # Disable tracing
+          set +x  # Disable debugging
       
           # Set the new tag as an output variable
           echo "new_tag=$new_tag" >> $GITHUB_ENV
