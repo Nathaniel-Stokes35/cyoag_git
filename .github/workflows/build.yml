@@ -75,8 +75,6 @@ jobs:
       - name: Get latest tag and increment version
         id: get_version
         run: |
-          set -x  # Enable verbose debugging
-
           # Proceed with known-good flow
           new_patch_version=$((version_parts[2] + 1))
           new_tag="v0.0.1" 
@@ -84,8 +82,6 @@ jobs:
           echo "Version parts: ${version_parts[@]}"
           echo "New patch version: $new_patch_version"
           echo "New tag: $new_tag"
-
-          set +x  # Disable debugging
       
           # Set the new tag as an output variable
           echo "new_tag=$new_tag" >> $GITHUB_ENV
