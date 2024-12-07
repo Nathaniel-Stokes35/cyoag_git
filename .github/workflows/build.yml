@@ -73,6 +73,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Get latest tag and increment version
+        if: matrix.os != 'windows-latest'
         id: get_version
         run: |
           new_tag="v0.0.1" 
@@ -83,6 +84,13 @@ jobs:
       
           # Set the new tag as an output variable
           echo "new_tag=$new_tag" >> $GITHUB_ENV
+      
+      - name: Set new tag (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          $new_tag = "v0.0.1"  
+          Write-Host "New tag: $new_tag"
+          echo "new_tag=$new_tag" >> $GITHUB_ENV  
 
       - name: Create a new Git tag
         run: |
