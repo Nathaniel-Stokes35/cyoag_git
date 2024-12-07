@@ -88,7 +88,7 @@ jobs:
 
           # Proceed with known-good flow
           new_patch_version=$((version_parts[2] + 1))
-          new_tag="v1.0.1" 
+          new_tag="v1.0.2" 
 
           echo "Version parts: ${version_parts[@]}"
           echo "New patch version: $new_patch_version"
