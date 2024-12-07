@@ -66,6 +66,11 @@ jobs:
             cyoag-linux.tar.gz
             cyoag-windows.zip
 
+      - name: Set up Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Get latest tag and increment version
         id: get_version
         run: |
@@ -99,11 +104,6 @@ jobs:
 
           # Set output variable for next steps
           echo "new_tag=$new_tag" >> $GITHUB_ENV
-
-      - name: Set up Git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Fetch existing tags to ensure we're working with the latest
         run: |
