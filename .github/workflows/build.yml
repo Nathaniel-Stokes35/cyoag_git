@@ -55,8 +55,9 @@ jobs:
       - name: Archive the executable (Windows)
         if: matrix.os == 'windows-latest'
         run: |
-          move dist\run_cyoag.exe cyoag-windows.exe   # Rename Windows executable
-          zip cyoag-windows.zip cyoag-windows.exe  # Zip the Windows executable
+          Rename-Item -Path "dist/run_cyoag.exe" -NewName "cyoag-windows.exe"
+          Compress-Archive -Path "cyoag-windows.exe" -DestinationPath "cyoag-windows.zip"
+        shell: pwsh
 
       - name: Upload Executable Artifacts
         uses: actions/upload-artifact@v3
