@@ -77,18 +77,9 @@ jobs:
         run: |
           set -x  # Enable verbose debugging
 
-          git fetch --tags
-          latest_tag=$(git tag -l | sort -V | tail -n 1 | tr -d '\n')
-
-          if [[ -z "$latest_tag" ]]; then
-            version_parts=("1" "0" "-1")
-          else
-            IFS='.' read -r -a version_parts <<< "$latest_tag"
-          fi
-
           # Proceed with known-good flow
           new_patch_version=$((version_parts[2] + 1))
-          new_tag="v1.0.2" 
+          new_tag="v0.0.1" 
 
           echo "Version parts: ${version_parts[@]}"
           echo "New patch version: $new_patch_version"
