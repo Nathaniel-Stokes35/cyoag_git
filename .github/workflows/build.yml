@@ -75,22 +75,18 @@ jobs:
       - name: Get latest tag and increment version
         id: get_version
         run: |
-          # Fetch all tags and debug outputs
           set -x  # Enable verbose debugging
 
-          git fetch --tags
-
-          # Correct variable assignment
-          latest_tag=$(git tag -l | sort -V | tail -n 1)
-          echo "Latest tag: $latest_tag"
-
-          # Split into version parts correctly
-          IFS='.' read -r -a version_parts <<< "$latest_tag"
+          it fetch --tags
+          latest_tag=$(git tag -l | sort -V | tail -n 1 | tr -d '\n')
 
           if [[ -z "$latest_tag" ]]; then
             version_parts=("1" "0" "-1")
+          else
+            IFS='.' read -r -a version_parts <<< "$latest_tag"
           fi
 
+          # Proceed with known-good flow
           new_patch_version=$((version_parts[2] + 1))
           new_tag="v${version_parts[0]}.${version_parts[1]}.$new_patch_version"
 
