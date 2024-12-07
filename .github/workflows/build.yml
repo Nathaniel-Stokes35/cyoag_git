@@ -74,40 +74,30 @@ jobs:
       - name: Get latest tag and increment version
         id: get_version
         run: |
+          # Fetch all tags
+          git fetch --tags
+      
+          # Get the latest tag and increment
           latest_tag=$(git tag -l | sort -V | tail -n 1)
           echo "Latest tag: $latest_tag"
-
+      
           # Split the version string into an array by '.' separator
           version_parts=(${latest_tag//./ })
-
-          # If no valid tag is found, initialize to v1.0.-1 (this ensures the first increment will make it v1.0.0)
+      
+          # If no valid tag is found, initialize to v1.0.-1
           if [[ ${#version_parts[@]} -eq 0 ]]; then
-            version_parts=("1" "0" "-1")  # Start with v1.0.-1
+            version_parts=("1" "0" "-1")
           fi
-
+      
           # Increment the patch version
           new_patch_version=$((version_parts[2] + 1))
-
-          # Create the new tag
+      
+          # Create the new version tag
           new_tag="v${version_parts[0]}.${version_parts[1]}.$new_patch_version"
-
-          # Check if the tag already exists
-          if git rev-parse "$new_tag" >/dev/null 2>&1; then
-            echo "Tag $new_tag already exists. Skipping tag creation."
-          else
-            echo "New tag: $new_tag"
-            # Create the new tag
-            git tag -a $new_tag -m "Release version $new_tag"
-            # Push the new tag to GitHub
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --tags
-          fi
-
-          # Set output variable for next steps
+          echo "New tag: $new_tag"
+      
+          # Set the new tag as an output variable
           echo "new_tag=$new_tag" >> $GITHUB_ENV
-
-      - name: Fetch existing tags to ensure we're working with the latest
-        run: |
-          git fetch --tags
 
       - name: Create a new Git tag
         run: |
