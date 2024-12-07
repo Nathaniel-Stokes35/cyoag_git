@@ -78,7 +78,6 @@ jobs:
             patch_version=${version_parts[2]}
             new_patch_version=$((patch_version + 1))
             new_tag="v${version_parts[0]}.${version_parts[1]}.$new_patch_version"
-          fi
           
           echo "New tag: $new_tag"
           
