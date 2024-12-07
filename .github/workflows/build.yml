@@ -56,7 +56,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           Rename-Item -Path "dist/run_cyoag.exe" -NewName "cyoag-windows.exe"
-          Compress-Archive -Path "cyoag-windows.exe" -DestinationPath "cyoag-windows.zip"
+          Compress-Archive -Path "dist/cyoag-windows.exe" -DestinationPath "cyoag-windows.zip"
         shell: pwsh
 
       - name: Upload Executable Artifacts
