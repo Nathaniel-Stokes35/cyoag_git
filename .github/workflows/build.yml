@@ -73,10 +73,6 @@ jobs:
           latest_tag=$(git tag -l | sort -V | tail -n 1)
           echo "Latest tag: $latest_tag"
           
-          # If no tags exist, start from v1.0.0
-          if [[ -z "$latest_tag" ]]; then
-            new_tag="v1.0.0"
-          else
             # Split version into parts and increment patch version
             version_parts=(${latest_tag//./ })
             patch_version=${version_parts[2]}
