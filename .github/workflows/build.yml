@@ -75,26 +75,27 @@ jobs:
       - name: Get latest tag and increment version
         id: get_version
         run: |
-          set -x  # Enable verbose debugging
-
+          # Fetch all tags
           git fetch --tags
-          latest_tag=$(git tag -l | sort -V | tail -n 1 | tr -d '\n')
-
-          if [[ -z "$latest_tag" ]]; then
+      
+          # Get the latest tag and increment
+          latest_tag=$(git tag -l | sort -V | tail -n 1)
+          echo "Latest tag: $latest_tag"
+      
+          # Split the version string into an array by '.' separator
+          version_parts=(${latest_tag//./ })
+      
+          # If no valid tag is found, initialize to v1.0.-1
+          if [[ ${#version_parts[@]} -eq 0 ]]; then
             version_parts=("1" "0" "-1")
-          else
-            IFS='.' read -r -a version_parts <<< "$latest_tag"
           fi
-
-          # Proceed with known-good flow
+      
+          # Increment the patch version
           new_patch_version=$((version_parts[2] + 1))
+      
+          # Create the new version tag
           new_tag="v${version_parts[0]}.${version_parts[1]}.$new_patch_version"
-
-          echo "Version parts: ${version_parts[@]}"
-          echo "New patch version: $new_patch_version"
           echo "New tag: $new_tag"
-
-          set +x  # Disable debugging
       
           # Set the new tag as an output variable
           echo "new_tag=$new_tag" >> $GITHUB_ENV
