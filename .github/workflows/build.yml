@@ -84,6 +84,7 @@ jobs:
       
           # Split the version string into an array by '.' separator
           version_parts=(${latest_tag//./ })
+          echo "Version parts: ${version_parts[@]}"
       
           # If no valid tag is found, initialize to v1.0.-1
           if [[ ${#version_parts[@]} -eq 0 ]]; then
@@ -92,6 +93,7 @@ jobs:
       
           # Increment the patch version
           new_patch_version=$((version_parts[2] + 1))
+          echo "New patch version: $new_patch_version"
       
           # Create the new version tag
           new_tag="v${version_parts[0]}.${version_parts[1]}.$new_patch_version"
