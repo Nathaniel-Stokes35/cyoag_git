@@ -78,7 +78,7 @@ jobs:
           # Fetch all tags
           git fetch --tags
 
-          # Get the latest tag correctly
+          # Get the latest tag
           latest_tag=$(git tag -l | sort -V | tail -n 1)
           echo "Latest tag: $latest_tag"
 
@@ -86,7 +86,7 @@ jobs:
           IFS='.' read -r -a version_parts <<< "$latest_tag"
 
           # Initialize version if no valid tag
-          if [[ ${#version_parts[@]} -eq 0 ]]; then
+          if [[ -z "$latest_tag" ]]; then
             version_parts=("1" "0" "-1")
           fi
 
