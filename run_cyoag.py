@@ -115,11 +115,11 @@ def check_and_download_file():
         print("cyoag.py already exists locally.")
 
 if __name__ == "__main__":
-    # First, ensure all dependencies are installed
-    install_requirements()  # Install missing packages from requirements.txt
+    # First, Clone the repository from GitHub if needed
+    clone_repository()
 
-    # Clone the repository from GitHub if needed
-    clone_repository()  
+    # Next, install dependancies
+    install_requirements()  # Install missing packages from requirements.txt  
 
     # Check and download cyoag.py if missing
     check_and_download_file()
