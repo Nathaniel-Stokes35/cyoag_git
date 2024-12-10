@@ -20,7 +20,7 @@ def get_current_directory():
     return os.path.dirname(os.path.abspath(__file__))
 
 # Modify paths to be relative to the current directory
-FILE_NAME = os.path.join(get_current_directory(), 'cyoag.py')
+FILE_NAME = os.path.join(get_current_directory(), 'cyoag_git', 'cyoag.py')
 LOCAL_REPO_DIR = os.path.join(get_current_directory(), 'cyoag_git')
 
 def is_git_installed():
@@ -105,7 +105,6 @@ def install_requirements():
     """Check if all required packages in requirements.txt are installed."""
     if os.path.exists(INSTALL_FLAG_FILE):
         print("Installation already in progress. Skipping installation step.")
-        run_game()
         return
     
     try:
@@ -114,7 +113,7 @@ def install_requirements():
             f.write("Installation in progress...\n")
 
         # Read the requirements.txt file
-        with open('requirements.txt', 'r') as f:
+        with open(os.path.join('cyoag_git', 'requirements.txt'), 'r') as f:
             required_packages = f.readlines()
 
         # Clean up any extra spaces or newlines from each package name
@@ -128,7 +127,6 @@ def install_requirements():
                 # If the package is missing, install it
                 print(f"{package} is not installed. Installing...")
                 install_package(package)
-        run_game()
 
     except FileNotFoundError:
         print("requirements.txt file not found. Please ensure it is in the same directory as the script.")
@@ -140,6 +138,7 @@ def install_requirements():
         # Remove the flag file after installation is complete
         if os.path.exists(INSTALL_FLAG_FILE):
             os.remove(INSTALL_FLAG_FILE)
+            run_game()
 
 def run_game():
     """Launch the game based on the operating system."""
