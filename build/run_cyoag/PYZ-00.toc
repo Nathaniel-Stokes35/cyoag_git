@@ -1,0 +1,2 @@
+('/home/nathaniel-stokes/Shared/portfolio/cyoag_git/build/run_cyoag/PYZ-00.pyz',
+ [])
