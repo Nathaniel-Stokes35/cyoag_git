@@ -27,26 +27,32 @@ def is_git_installed():
     try:
         subprocess.check_call(['git', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return True
+    except FileNotFoundError:
+        print("Git is not installed or not available in PATH.")
+        return False
     except subprocess.CalledProcessError:
+        print("Git is installed but encountered an error.")
         return False
 
 def install_git():
     """Install Git if it is missing."""
     print("Git is not installed. Installing Git...")
+
+    # If Git is not installed, provide instructions to install manually or automate
     git_installer_url = "https://git-scm.com/download/win"
     
     # Download Git installer
     installer_path = "git-installer.exe"
     urllib.request.urlretrieve(git_installer_url, installer_path)
 
-    # Run the installer
-    subprocess.check_call([installer_path, "/VERYSILENT", "/NORESTART"])
-    
-    # After installation, check again
-    if is_git_installed():
+    # Run the installer silently
+    try:
+        subprocess.check_call([installer_path, "/VERYSILENT", "/NORESTART"])
         print("Git installed successfully!")
-    else:
-        print("Failed to install Git.")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to install Git automatically: {e}")
+        print("Please manually install Git from https://git-scm.com/download/win and add it to your PATH.")
+        sys.exit(1)
 
 def clone_repository():
     """Clone the repository from GitHub if it isn't already cloned."""
