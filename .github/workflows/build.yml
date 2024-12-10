@@ -34,7 +34,7 @@ jobs:
 
       - name: Build the executable with PyInstaller
         run: |
-          pyinstaller --onefile run_cyoag.py
+          pyinstaller --onefile --hidden-import=requests run_cyoag.py
 
       - name: List dist directory contents (Linux/macOS)
         if: runner.os != 'Windows'  # Only run this on Linux/macOS
