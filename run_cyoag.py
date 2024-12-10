@@ -1,5 +1,9 @@
 import subprocess
 import sys
+import os
+
+# Create a flag file to prevent recursive installs
+INSTALL_FLAG_FILE = "installing_flag.txt"
 
 def install_package(package):
     """Installs the given package using pip."""
@@ -10,7 +14,15 @@ def install_package(package):
 
 def install_requirements():
     """Check if all required packages in requirements.txt are installed."""
+    if os.path.exists(INSTALL_FLAG_FILE):
+        print("Installation already in progress. Skipping installation step.")
+        return
+    
     try:
+        # Create a flag to indicate installation is in progress
+        with open(INSTALL_FLAG_FILE, 'w') as f:
+            f.write("Installation in progress...\n")
+
         # Read the requirements.txt file
         with open('requirements.txt', 'r') as f:
             required_packages = f.readlines()
@@ -33,6 +45,10 @@ def install_requirements():
     except Exception as e:
         print(f"Error while checking/installing dependencies: {e}")
         sys.exit(1)
+    finally:
+        # Remove the flag file after installation is complete
+        if os.path.exists(INSTALL_FLAG_FILE):
+            os.remove(INSTALL_FLAG_FILE)
 
 def run_game():
     """Launch the game based on the operating system."""
