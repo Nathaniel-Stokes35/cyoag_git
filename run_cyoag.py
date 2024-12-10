@@ -39,7 +39,7 @@ def run_game():
     if sys.platform.startswith('linux'):
         # Linux: Try using gnome-terminal or fallback to xterm if gnome-terminal isn't found
         try:
-            subprocess.run(['gnome-terminal', '--geometry=300x50', '--', 'bash', '-c', 'python3 cyoag.py; exec bash'])
+            subprocess.run(['gnome-terminal', '--geometry=300x50', '--', 'python3', 'cyoag.py'])
         except FileNotFoundError:
             print("gnome-terminal not found, trying xterm.")
             subprocess.run(['xterm', '-geometry', '300x50', '-e', 'python3 cyoag.py'])
