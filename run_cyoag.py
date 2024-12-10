@@ -87,14 +87,14 @@ def run_game():
     if sys.platform.startswith('linux'):
         # Linux: Try using gnome-terminal or fallback to xterm if gnome-terminal isn't found
         try:
-            subprocess.run(['gnome-terminal', '--geometry=300x50', '--', 'python3', 'cyoag.py'])
+            subprocess.run(['gnome-terminal', '--geometry=300x50', '--', 'python3', 'cyoag_git/cyoag.py'])
         except FileNotFoundError:
             print("gnome-terminal not found, trying xterm.")
             subprocess.run(['xterm', '-geometry', '300x50', '-e', 'python3 cyoag.py'])
     elif sys.platform.startswith('win'):
         # Windows: Open Command Prompt, set window size, and run the Python script
         subprocess.run('mode con: cols=300 lines=50', shell=True)  # Set terminal window size
-        subprocess.run(['start', 'cmd', '/k', 'python cyoag.py'], shell=True)
+        subprocess.run(['start', 'cmd', '/k', 'python cyoag_git\cyoag.py'], shell=True)
     else:
         print("Unsupported platform.")
 
