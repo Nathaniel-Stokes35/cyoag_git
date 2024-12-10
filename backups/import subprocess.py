@@ -105,6 +105,7 @@ def install_requirements():
     """Check if all required packages in requirements.txt are installed."""
     if os.path.exists(INSTALL_FLAG_FILE):
         print("Installation already in progress. Skipping installation step.")
+        run_game()
         return
     
     try:
@@ -127,6 +128,7 @@ def install_requirements():
                 # If the package is missing, install it
                 print(f"{package} is not installed. Installing...")
                 install_package(package)
+        run_game()
 
     except FileNotFoundError:
         print("requirements.txt file not found. Please ensure it is in the same directory as the script.")
@@ -144,14 +146,14 @@ def run_game():
     if sys.platform.startswith('linux'):
         # Linux: Try using gnome-terminal or fallback to xterm if gnome-terminal isn't found
         try:
-            subprocess.run(['gnome-terminal', '--geometry=300x50', '--', 'python3', FILE_NAME])
+            subprocess.run(['gnome-terminal', '--geometry=300x50', '--', 'python3', 'cyoag_git/cyoag.py'])
         except FileNotFoundError:
             print("gnome-terminal not found, trying xterm.")
-            subprocess.run(['xterm', '-geometry=300x50', '-e', f'python3 {FILE_NAME}'])
+            subprocess.run(['xterm', '-geometry', '300x50', '-e', 'python3 cyoag_git/cyoag.py'])
     elif sys.platform.startswith('win'):
         # Windows: Open Command Prompt, set window size, and run the Python script
         subprocess.run('mode con: cols=300 lines=50', shell=True)  # Set terminal window size
-        subprocess.run(['start', 'cmd', '/k', f'python {FILE_NAME}'], shell=True)
+        subprocess.run(['start', 'cmd', '/k', 'python cyoag_git\cyoag.py'], shell=True)
     else:
         print("Unsupported platform.")
 
@@ -167,4 +169,3 @@ if __name__ == "__main__":
     clone_repository()         # Clone the repository if not already present
     check_and_download_file()  # Check for the file in the parent directory, and download if missing
     install_requirements()     # Install missing packages from requirements.txt
-    run_game()                 # Launch the game
