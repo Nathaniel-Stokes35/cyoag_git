@@ -1344,7 +1344,7 @@ class storyboard:
 
         if self.character_data.get('Class') in ('commander', 'squad-leader', 'shock-trooper'):
 
-            space_bg_image = Image.open(current_directory / 'spiral_galaxy.jpg')
+            space_bg_image = Image.open(current_directory / 'images' / 'spiral_galaxy.jpg')
             space_bg_image = space_bg_image.resize((2000, 2000), Image.LANCZOS)
             self.bg_photo = ImageTk.PhotoImage(space_bg_image)
             self.bg_label.config(image=self.bg_photo, bg='#000000', width=2000, height=2000)
@@ -1447,7 +1447,7 @@ class storyboard:
             
             self.root.geometry('1024x1024+{}+{}'.format(int(self.root.winfo_screenwidth()/4), int(self.root.winfo_screenheight()/4)))
 
-            space_bg_image = Image.open(current_directory / 'cramp_space.jpg')
+            space_bg_image = Image.open(current_directory / 'images' / 'cramp_space.jpg')
             space_bg_image = space_bg_image.resize((1024, 1024), Image.LANCZOS)
             self.bg_photo = ImageTk.PhotoImage(space_bg_image)
             self.bg_label.config(image=self.bg_photo, bg='#000000', width=1024, height=1024)
@@ -1531,7 +1531,7 @@ class storyboard:
 
         if self.character_data.get('Class') in ('survivalist', 'worker', 'tactician'):
 
-            space_bg_image = Image.open(current_directory / 'tight_space.png')
+            space_bg_image = Image.open(current_directory / 'images' / 'tight_space.png')
             space_bg_image = space_bg_image.resize((2000, 2000), Image.LANCZOS)
             self.bg_photo = ImageTk.PhotoImage(space_bg_image)
             self.bg_label.config(image=self.bg_photo, bg='#000000', width=2000, height=2000)
@@ -1621,7 +1621,7 @@ class storyboard:
                 
         if self.character_data.get('Class') in ('embassy-diplomat', 'war-hero', 'smuggler'):
             self.character_data.update({'Archetype':'Diplomat'})
-            space_bg_image = Image.open(current_directory / 'training_in_space.png')
+            space_bg_image = Image.open(current_directory / 'images' / 'training_in_space.png')
             space_bg_image = space_bg_image.resize((2000, 2000), Image.LANCZOS)
             self.bg_photo = ImageTk.PhotoImage(space_bg_image)
             self.bg_label.config(image=self.bg_photo, bg='#000000', width=2000, height=2000)
@@ -1719,7 +1719,7 @@ class storyboard:
             intro_button = tk.Button(self.space_frame, text="Next", command=self.on_intro,  font=self.label_font)
             intro_button.pack(pady=10)
 
-            space_bg_image = Image.open(current_directory / 'sterile_lab.jpg')
+            space_bg_image = Image.open(current_directory / 'images' / 'sterile_lab.jpg')
             space_bg_image = space_bg_image.resize((2000, 2000), Image.LANCZOS)
             self.bg_photo = ImageTk.PhotoImage(space_bg_image)
             self.bg_label.config(image=self.bg_photo, bg='#000000', width=2000, height=2000)
