@@ -27,7 +27,7 @@ def install_requirements():
             f.write("Installation in progress...\n")
 
         # Read the requirements.txt file
-        with open('requirements.txt', 'r') as f:
+        with open(os.path.join('cyoag_git', 'requirements.txt'), 'r') as f:
             required_packages = f.readlines()
 
         # Clean up any extra spaces or newlines from each package name
@@ -44,14 +44,13 @@ def install_requirements():
 
     except FileNotFoundError:
         print("requirements.txt file not found. Please ensure it is in the same directory as the script.")
-        sys.exit(1)
     except Exception as e:
         print(f"Error while checking/installing dependencies: {e}")
-        sys.exit(1)
     finally:
         # Remove the flag file after installation is complete
         if os.path.exists(INSTALL_FLAG_FILE):
             os.remove(INSTALL_FLAG_FILE)
+        run_game()
 
 def is_git_installed():
     """Check if Git is installed by running 'git --version'."""
@@ -69,7 +68,6 @@ def clone_repository():
     """Clone the repository from GitHub if it isn't already cloned."""
     if not is_git_installed():
         print("Git is not installed. Please install Git to continue. You can get it from https://git-scm.com/download.")
-        sys.exit(1)
 
     if not os.path.exists(LOCAL_REPO_DIR):
         print(f"Repository not found locally. Cloning from GitHub...")
@@ -78,7 +76,6 @@ def clone_repository():
             print(f"Repository cloned successfully to {LOCAL_REPO_DIR}.")
         except subprocess.CalledProcessError as e:
             print(f"Error cloning repository: {e}")
-            sys.exit(1)
     else:
         print(f"Repository already exists locally at {LOCAL_REPO_DIR}.")
 
@@ -87,14 +84,14 @@ def run_game():
     if sys.platform.startswith('linux'):
         # Linux: Try using gnome-terminal or fallback to xterm if gnome-terminal isn't found
         try:
-            subprocess.run(['gnome-terminal', '--geometry=300x50', '--', 'python3', 'cyoag_git/cyoag.py'])
+            subprocess.run(['gnome-terminal', '--geometry=300x50', '--', 'python3', {os.path.join('cyoag_git', 'cyoag.py')}])
         except FileNotFoundError:
             print("gnome-terminal not found, trying xterm.")
-            subprocess.run(['xterm', '-geometry', '300x50', '-e', 'python3 cyoag.py'])
+            subprocess.run(['xterm', '-geometry', '300x50', '-e', f'python3 {os.path.join('cyoag_git', 'cyoag.py')}'])
     elif sys.platform.startswith('win'):
         # Windows: Open Command Prompt, set window size, and run the Python script
         subprocess.run('mode con: cols=300 lines=50', shell=True)  # Set terminal window size
-        subprocess.run(['start', 'cmd', '/k', 'python cyoag_git\cyoag.py'], shell=True)
+        subprocess.run(['start', 'cmd', '/k', f'python {os.path.join('cyoag_git', 'cyoag.py')}'], shell=True)
     else:
         print("Unsupported platform.")
 
@@ -110,7 +107,6 @@ def check_and_download_file():
             print(f"cyoag.py successfully downloaded from GitHub.")
         except requests.exceptions.RequestException as e:
             print(f"Failed to download file: {e}")
-            sys.exit(1)
     else:
         print("cyoag.py already exists locally.")
 
@@ -123,6 +119,3 @@ if __name__ == "__main__":
 
     # Check and download cyoag.py if missing
     check_and_download_file()
-
-    # Run the game
-    run_game()
