@@ -3,6 +3,7 @@ import sys
 import os
 import requests
 import urllib.request
+import platform
 
 # Define constants
 FILE_NAME = 'cyoag.py'  # Name of the game file
@@ -38,21 +39,31 @@ def install_git():
     """Install Git if it is missing."""
     print("Git is not installed. Installing Git...")
 
-    # If Git is not installed, provide instructions to install manually or automate
-    git_installer_url = "https://git-scm.com/download/win"
-    
-    # Download Git installer
-    installer_path = "git-installer.exe"
-    urllib.request.urlretrieve(git_installer_url, installer_path)
+    if platform.system() == 'Windows':
+        try:
+            # Using winget to install Git (Windows Package Manager)
+            print("Attempting to install Git via winget...")
+            subprocess.check_call(['winget', 'install', 'Git.Git'])
+            print("Git installed successfully via winget!")
+            return
+        except subprocess.CalledProcessError:
+            print("winget failed, falling back to curl method.")
 
-    # Run the installer silently
-    try:
-        subprocess.check_call([installer_path, "/VERYSILENT", "/NORESTART"])
-        print("Git installed successfully!")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to install Git automatically: {e}")
-        print("Please manually install Git from https://git-scm.com/download/win and add it to your PATH.")
-        sys.exit(1)
+        # Use curl to download Git installer if winget fails
+        git_installer_url = "https://github.com/git-for-windows/git/releases/download/v2.40.0.windows.1/Git-2.40.0-64-bit.exe"
+        installer_path = os.path.join(get_current_directory(), 'git-installer.exe')
+
+        # Download the Git installer
+        urllib.request.urlretrieve(git_installer_url, installer_path)
+
+        # Run the installer silently
+        try:
+            subprocess.check_call([installer_path, "/VERYSILENT", "/NORESTART"])
+            print("Git installed successfully!")
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to install Git automatically: {e}")
+            print("Please manually install Git from https://git-scm.com/download/win and add it to your PATH.")
+            sys.exit(1)
 
 def clone_repository():
     """Clone the repository from GitHub if it isn't already cloned."""
