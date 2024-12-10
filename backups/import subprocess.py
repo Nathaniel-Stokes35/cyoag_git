@@ -2,6 +2,7 @@ import subprocess
 import sys
 import os
 import requests
+import urllib.request
 
 # Define constants
 FILE_NAME = 'cyoag.py'  # Name of the game file
@@ -9,6 +10,59 @@ GITHUB_URL = 'https://raw.githubusercontent.com/Nathaniel-Stokes35/cyoag_git/mai
 REPO_URL = 'https://github.com/Nathaniel-Stokes35/cyoag_git.git'  # URL for the GitHub repository
 LOCAL_REPO_DIR = 'cyoag_git'  # Directory to store the cloned repo
 INSTALL_FLAG_FILE = "installing_flag.txt"  # Flag to prevent recursive installs
+
+def get_current_directory():
+    """Get the current directory where the script is running (handle PyInstaller packaged executable)."""
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller sets _MEIPASS to the temporary folder where it extracts the bundled files
+        return sys._MEIPASS
+    return os.path.dirname(os.path.abspath(__file__))
+
+# Modify paths to be relative to the current directory
+FILE_NAME = os.path.join(get_current_directory(), 'cyoag.py')
+LOCAL_REPO_DIR = os.path.join(get_current_directory(), 'cyoag_git')
+
+def is_git_installed():
+    """Check if Git is installed by running 'git --version'."""
+    try:
+        subprocess.check_call(['git', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+def install_git():
+    """Install Git if it is missing."""
+    print("Git is not installed. Installing Git...")
+    git_installer_url = "https://git-scm.com/download/win"
+    
+    # Download Git installer
+    installer_path = "git-installer.exe"
+    urllib.request.urlretrieve(git_installer_url, installer_path)
+
+    # Run the installer
+    subprocess.check_call([installer_path, "/VERYSILENT", "/NORESTART"])
+    
+    # After installation, check again
+    if is_git_installed():
+        print("Git installed successfully!")
+    else:
+        print("Failed to install Git.")
+
+def clone_repository():
+    """Clone the repository from GitHub if it isn't already cloned."""
+    if not is_git_installed():
+        install_git()  # Install Git if it's not present
+
+    if not os.path.exists(LOCAL_REPO_DIR):
+        print(f"Repository not found locally. Cloning from GitHub...")
+        try:
+            subprocess.check_call(['git', 'clone', REPO_URL])
+            print(f"Repository cloned successfully to {LOCAL_REPO_DIR}.")
+        except subprocess.CalledProcessError as e:
+            print(f"Error cloning repository: {e}")
+            sys.exit(1)
+    else:
+        print(f"Repository already exists locally at {LOCAL_REPO_DIR}.")
 
 def download_file():
     """Download the cyoag.py file from GitHub if it's missing."""
@@ -22,19 +76,6 @@ def download_file():
     except requests.exceptions.RequestException as e:
         print(f"Failed to download file: {e}")
         sys.exit(1)
-
-def clone_repository():
-    """Clone the repository from GitHub if it isn't already cloned."""
-    if not os.path.exists(LOCAL_REPO_DIR):
-        print(f"Repository not found locally. Cloning from GitHub...")
-        try:
-            subprocess.check_call(['git', 'clone', REPO_URL])
-            print(f"Repository cloned successfully to {LOCAL_REPO_DIR}.")
-        except subprocess.CalledProcessError as e:
-            print(f"Error cloning repository: {e}")
-            sys.exit(1)
-    else:
-        print(f"Repository already exists locally at {LOCAL_REPO_DIR}.")
 
 def install_package(package):
     """Installs the given package using pip."""
